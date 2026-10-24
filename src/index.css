@@ -1,0 +1,423 @@
+@import 'tailwindcss';
+
+/* Céu de anime com o Naruto de costas: caixas brancas com halftone e borda laranja,
+   títulos pesados e itálicos com contorno preto, chips pretos inclinados para os números. */
+:root {
+  --ink: #0a0a14;
+  --orange: #ff8c0a;
+  --scarlet: #e8221b;
+  --paper: #ffffff;
+  --steel: #5b6478;
+
+  /* Estados do jogo: sempre acompanhados de glifo (✓ ≈ ✕), a cor nunca é a única pista. */
+  --hit: #35d07f;
+  --near: #ffd23f;
+  --miss: #1a2140;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-orange: var(--orange);
+  --color-scarlet: var(--scarlet);
+  --color-steel: var(--steel);
+  --color-hit: var(--hit);
+  --color-near: var(--near);
+  --color-miss: var(--miss);
+
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme {
+  /* Célula "virando" ao revelar o resultado do palpite. */
+  --animate-reveal: reveal 0.45s ease-out both;
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: perspective(400px) rotateX(-90deg);
+    }
+    to {
+      opacity: 1;
+      transform: perspective(400px) rotateX(0);
+    }
+  }
+
+  /* Entrada dos itens do menu, deslizando pela esquerda. */
+  --animate-slide: slide 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @keyframes slide {
+    from {
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+body {
+  background: #1450d8;
+  color: #fff;
+  font-family: var(--font-sans);
+}
+
+/* ---------- Tipografia ---------- */
+/* Peso 900 itálico em caixa alta: títulos, menus e números. */
+.mm-display {
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.88;
+}
+/* Contorno preto por fora das letras e sombra dura, como nos títulos da arte. */
+.nd-outline {
+  -webkit-text-stroke: 0.1em var(--ink);
+  paint-order: stroke fill;
+  stroke-linejoin: round;
+  text-shadow: 0.05em 0.06em 0 var(--ink);
+}
+/* Rótulos: itálico 700, caixa alta, um pouco espaçados. Brancos sobre o céu, cinza sobre branco. */
+.mm-label {
+  font-size: 12px;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+}
+:is(.mm-box, .nd-card, .mm-row, .mm-dialog) .mm-label {
+  color: var(--steel);
+  text-shadow: none;
+}
+
+/* ---------- Caixa branca (usada na vitória): halftone, borda laranja, contorno preto e sombra dura ---------- */
+.mm-box {
+  position: relative;
+  isolation: isolate;
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--orange);
+  outline: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+/* Pontos de halftone no canto inferior direito. */
+.mm-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgb(10 10 20 / 0.22) 1.3px, transparent 1.7px);
+  background-size: 7px 7px;
+  mask-image: linear-gradient(120deg, transparent 55%, #000 100%);
+}
+
+/* ---------- Cartão da arte de referência (ver Card.tsx), medido pixel a pixel ----------
+   Camadas, de baixo para cima: halftone, sombra preta, moldura laranja e papel branco. A sombra e a
+   moldura têm o mesmo recorte, com o canto de baixo à direita cortado em 50 x 20,4 px. */
+.nd-card {
+  --cut-x: 50px;
+  --cut-y: 20.4px;
+  position: relative;
+  isolation: isolate;
+  color: var(--ink);
+}
+.nd-card > span {
+  position: absolute;
+  pointer-events: none;
+}
+.nd-card__shadow,
+.nd-card__frame,
+.nd-card__paper {
+  inset: 0;
+}
+.nd-card__shadow,
+.nd-card__frame {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut-y)), calc(100% - var(--cut-x)) 100%, 0 100%);
+}
+.nd-card__shadow {
+  background: var(--ink);
+  transform: translate(4px, 5px);
+}
+.nd-card__frame {
+  background: #e8962b;
+}
+/* Borda de 3,7 px nos lados, 2,7 px em cima, 2,8 px embaixo e 3,3 px na diagonal do canto cortado. */
+.nd-card__paper {
+  background: #fff;
+  clip-path: polygon(
+    3.7px 2.7px,
+    calc(100% - 3.7px) 2.7px,
+    calc(100% - 3.7px) calc(100% - var(--cut-y) - 2.05px),
+    calc(100% - var(--cut-x) - 1.9px) calc(100% - 2.8px),
+    3.7px calc(100% - 2.8px)
+  );
+}
+/* Xadrez cinza claro de 1 px que vai aparecendo do centro para o canto de baixo à direita. */
+.nd-card__paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(rgb(10 10 20 / 0.2) 25%, transparent 0 50%, rgb(10 10 20 / 0.2) 0 75%, transparent 0) 0 0 /
+    2px 2px;
+  mask-image: radial-gradient(
+    ellipse 150px 125px at 100% 100%,
+    #000,
+    rgb(0 0 0 / 0.94) 17%,
+    rgb(0 0 0 / 0.73) 43%,
+    rgb(0 0 0 / 0.43) 70%,
+    rgb(0 0 0 / 0.05) 97%,
+    transparent
+  );
+}
+/* Halftone preto: uma faixa de 8 px por fora da borda esquerda que dobra o canto e segue um trecho
+   por baixo da sombra, sumindo para a direita. Grade em xadrez com vizinhos a cerca de 3 px. */
+.nd-card__halftone {
+  left: -9px;
+  top: 4px;
+  bottom: -15px;
+  width: 190px;
+  background-image:
+    radial-gradient(circle, rgb(10 10 20 / 0.85) 0.75px, transparent 1.1px),
+    radial-gradient(circle, rgb(10 10 20 / 0.85) 0.75px, transparent 1.1px);
+  background-size: 4.5px 4.4px;
+  background-position:
+    0 0,
+    2.25px 2.2px;
+  mask-image: linear-gradient(#000, #000), linear-gradient(to right, #000 25%, transparent);
+  mask-size:
+    8px 100%,
+    100% 26px;
+  mask-position:
+    left top,
+    left bottom;
+  mask-repeat: no-repeat;
+}
+.nd-card__body {
+  position: relative;
+  padding: 16px 28px 24px 30px;
+}
+
+/* ---------- Botão: chip preto inclinado ---------- */
+.mm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transform: skewX(-12deg);
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: #fff;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.12s,
+    color 0.12s,
+    box-shadow 0.12s;
+}
+.mm-btn > * {
+  transform: skewX(12deg);
+}
+.mm-btn:hover,
+.mm-btn[aria-pressed='true'] {
+  background: var(--orange);
+  color: var(--ink);
+  box-shadow: inset -7px 0 0 var(--scarlet);
+}
+.mm-btn--primary {
+  background: var(--orange);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.mm-btn--primary:hover {
+  background: var(--scarlet);
+  color: #fff;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.mm-btn:disabled {
+  cursor: not-allowed;
+}
+.mm-btn:focus-visible,
+.mm-row:focus-visible,
+.nd-cell:focus-visible,
+.mm-input:focus-within {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---------- Título de seção: branco com contorno preto ---------- */
+.mm-title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: #fff;
+  -webkit-text-stroke: 0.1em var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 0.07em 0.08em 0 var(--ink);
+}
+.mm-title__count {
+  font-size: 0.6em;
+  color: var(--orange);
+}
+
+/* ---------- Linha de lista: faixa branca inclinada ---------- */
+.mm-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: skewX(-12deg);
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  padding: 6px 16px;
+  transition:
+    background-color 0.12s,
+    color 0.12s,
+    transform 0.12s;
+}
+.mm-row > * {
+  transform: skewX(12deg);
+}
+.mm-row[aria-selected='true'] {
+  background: var(--orange);
+  box-shadow: inset -8px 0 0 var(--scarlet);
+  transform: skewX(-12deg) translateX(10px);
+}
+.mm-row[aria-selected='true'] .mm-label {
+  color: var(--ink);
+}
+
+/* ---------- Faixa do menu: SVG com as medidas da arte de referência (ver MenuBanner.tsx) ---------- */
+.menu-banner {
+  width: min(100%, clamp(300px, 40vw, 540px));
+}
+.menu-banner__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.menu-banner__word {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  text-rendering: geometricPrecision;
+  user-select: none;
+}
+.menu-banner__item {
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.15s;
+}
+/* Ao passar o mouse a palavra corre um pouco ao longo da linha de base. */
+.menu-banner__item:hover {
+  transform: translate(4px, -0.65px);
+}
+.menu-banner__ring {
+  opacity: 0;
+  stroke: var(--ink);
+  stroke-width: 2.5px;
+  stroke-dasharray: 7 4;
+  pointer-events: none;
+}
+/* Halo branco por baixo do tracejado preto, para o foco aparecer também sobre a faixa preta. */
+.menu-banner__ring--halo {
+  stroke: #fff;
+  stroke-width: 5.5px;
+  stroke-dasharray: none;
+}
+.menu-banner__item:focus-visible .menu-banner__ring {
+  opacity: 1;
+}
+
+/* ---------- Janela (Como jogar) ---------- */
+.mm-dialog {
+  width: min(100% - 32px, 600px);
+  max-height: 92vh;
+  padding: 0;
+  border: 3px solid var(--orange);
+  outline: 2px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+.mm-dialog::backdrop {
+  background: rgb(10 10 20 / 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* ---------- Célula de resultado: ao passar o mouse ou tocar, explica o resultado ---------- */
+.nd-cell {
+  position: relative;
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 8px 10px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+  font-style: italic;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: pre-line;
+  cursor: help;
+}
+.nd-cell > .nd-cell__body {
+  transform: skewX(12deg);
+}
+.nd-cell__glyph {
+  position: absolute;
+  top: 3px;
+  right: 10px;
+  transform: skewX(12deg);
+  font-size: 11px;
+  opacity: 0.85;
+}
+.nd-cell__tip {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: inset -7px 0 0 var(--scarlet);
+}
+.nd-cell__tip > span {
+  transform: skewX(12deg);
+}
+.nd-cell:hover .nd-cell__tip,
+.nd-cell:focus .nd-cell__tip {
+  display: flex;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-reveal,
+  .animate-slide {
+    animation: none;
+  }
+  .mm-btn,
+  .mm-row,
+  .menu-banner__item {
+    transition: none;
+  }
+}

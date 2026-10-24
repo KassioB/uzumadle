@@ -1,0 +1,5 @@
+node_modules
+dist
+*.local
+scripts/.cache
+.backup-p3r
