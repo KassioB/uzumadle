@@ -7,7 +7,7 @@ Jogo de adivinhar personagens do universo Naruto, no estilo Wordle. Feito com Re
 ```bash
 npm install
 npm run dev       # http://localhost:5174
-npm run build     # checa os tipos e gera dist/
+npm run build     # checa os tipos e gera build/
 npm run preview   # serve o build
 ```
 
