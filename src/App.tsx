@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Avatar } from './components/Avatar';
-import { Backdrop } from './components/Backdrop';
 import { Card } from './components/Card';
 import { CharacterInput } from './components/CharacterInput';
 import { DevCredit } from './components/DevCredit';
@@ -48,7 +47,6 @@ export default function App() {
 
   return (
     <div className="flex min-h-dvh flex-col text-white">
-      <Backdrop />
       <Navbar
         dayLabel={mode === 'daily' ? `Dia #${String(getGameNumber()).padStart(3, '0')}` : 'Treino livre'}
         dayCaption={mode === 'daily' ? shortDate(new Date()) : 'quantos quiser'}

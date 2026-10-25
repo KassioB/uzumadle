@@ -3,8 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#1450d8" />
+    <meta name="theme-color" content="#135dbe" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- O fundo começa a baixar antes do JavaScript; cada tela baixa só a sua versão. -->
+    <link rel="preload" as="image" type="image/webp" href="/backdrop/fundo-alto.webp" media="(max-width: 767px)" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/webp" href="/backdrop/fundo-largo.webp" media="(min-width: 768px)" fetchpriority="high" />
     <title>Uzumadle (Narutodle) – Jogo de palpite de Naruto, o Wordle do Naruto</title>
     <meta
       name="description"

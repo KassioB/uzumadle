@@ -58,7 +58,7 @@ Direção de arte inspirada nos menus inclinados de Persona 3 Reload, com as cor
 - **Formas:** faixas e botões inclinados, caixas brancas com pontos de halftone, borda laranja e sombra dura preta.
 - **Topo:** a marca "Uzumadle" com o símbolo do clã Uzumaki (`SpiralMark`, que também é o favicon) e o chip preto com o dia e a data.
 - **Menu:** Diário, Infinito e Como jogar numa faixa inclinada, à esquerda (`MenuBanner`).
-- **Fundo (`Backdrop`):** `public/backdrop/4knaruto.jpg`, em tela cheia, com o Naruto de costas no canto direito.
+- **Fundo:** a arte do Naruto de costas, em tela cheia, desenhada no CSS (`body::before` em `src/index.css`) para começar a baixar junto com a página. O computador usa `public/backdrop/fundo-largo.webp` (a arte inteira) e o celular usa `fundo-alto.webp` (um recorte vertical com o Naruto). Uma prévia borrada embutida no CSS aparece enquanto a imagem carrega.
 
 ## Estrutura
 
@@ -73,7 +73,7 @@ src/
   hooks/       useDailyGame, useInfiniteGame, useGuesses
   components/  Navbar, Hero, MenuBanner, CharacterInput, GuessGrid, GuessRow, Legend,
                VictoryBanner, HowToPlay, Countdown, Avatar, Card, GenderIcon, NatureIcon,
-               SpiralMark, Backdrop
+               SpiralMark, DevCredit
 ```
 
 ## Fotos dos personagens

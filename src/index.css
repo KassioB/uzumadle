@@ -57,10 +57,42 @@
   }
 }
 
+/* Cores tiradas da arte (céu no topo, grama embaixo): aparecem no lugar do azul chapado
+   se o fundo ainda não carregou ou se a rolagem passar do limite. */
+html {
+  background: #135dbe linear-gradient(#135dbe, #1f92ee 45%, #466c69);
+}
 body {
-  background: #1450d8;
   color: #fff;
   font-family: var(--font-sans);
+}
+
+/* ---------- Fundo ---------- */
+/* Fica no CSS, e não no React, para começar a baixar junto com a página. A altura é a da
+   tela com a barra do navegador recolhida (lvh): assim ele não muda de tamanho durante a
+   rolagem no celular e não abre uma faixa vazia. Por baixo da arte fica uma prévia borrada
+   de poucos bytes, que aparece enquanto a imagem carrega. */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  pointer-events: none;
+  background:
+    url('/backdrop/fundo-alto.webp') 50% 60% / cover no-repeat,
+    url('data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAABQBQCdASoUACAAPtFYpEuoJSOhsAgBABoJaACdMoMggDT8O6s2WIUZZeajAPORzrUrdAAAyzAyaykLr9BF+z0sCcn8niRD38Xb8LBvz8O76tYxc567YNNyiYHloLfNwzAL+FH6S1Nt990re270wW94f1tuQCzP21PQ4UbcddnHXICb5wN0K2N/mkO/6LEihih0gkCvLZFH9nVhho/4uAAA') 50% 60% / cover no-repeat;
+  transform: translateZ(0);
+}
+@media (min-width: 768px) {
+  body::before {
+    background:
+      url('/backdrop/fundo-largo.webp') 50% 60% / cover no-repeat,
+      url('data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAABQBQCdASogABIAPtFWo0uoJKMhsAgBABoJagCdMtU0KBuaU2HMLTcN165wLQ+itmzbyAAA/oVcTsvme4NGCqhukjO4YNzFRRonJ7jbp1Mk0a51nfEKlGhyf8brtJC0x+h4yHcxBL9Mkbp7zImVe0clOgyNfnU0Z9+uzRUcJuVG3L99TmjXBNbIeJdlWAAJysuioMIDtoKAowhVgAA=') 50% 60% / cover no-repeat;
+  }
 }
 
 /* ---------- Tipografia ---------- */
