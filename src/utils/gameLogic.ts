@@ -19,8 +19,8 @@ function getDayNumber(date: Date): number {
   return Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / MS_PER_DAY);
 }
 
-/** Dia em que o jogo diário começou; o "DIA #1". */
-const FIRST_DAY = Date.UTC(2026, 9, 1);
+/** Dia do lançamento do jogo (24/10/2026); o "DIA #1". */
+const FIRST_DAY = Date.UTC(2026, 9, 24);
 
 /** Número do jogo diário para a data (1 no primeiro dia). */
 export function getGameNumber(date: Date = new Date()): number {

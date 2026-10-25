@@ -391,6 +391,20 @@ body {
   font-size: 11px;
   opacity: 0.85;
 }
+/* Nome do atributo no canto de cima, no cartão do celular. */
+.nd-cell__caption {
+  position: absolute;
+  top: 4px;
+  left: 12px;
+  transform: skewX(12deg);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+.nd-cell--captioned {
+  min-height: 70px;
+  padding-top: 20px;
+}
 .nd-cell__tip {
   position: absolute;
   inset: 0;
@@ -408,6 +422,17 @@ body {
 .nd-cell:hover .nd-cell__tip,
 .nd-cell:focus .nd-cell__tip {
   display: flex;
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 767px) {
+  /* O menu ocupa quase a largura toda, centralizado. */
+  .menu-banner {
+    width: min(100%, 380px);
+  }
+  .nd-card__body {
+    padding: 14px 18px 24px 20px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

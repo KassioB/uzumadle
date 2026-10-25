@@ -144,7 +144,7 @@ export function CharacterInput({ id, characters, excludedIds, onSelect }: Charac
             onFocus={() => setOpen(true)}
             onBlur={() => setOpen(false)}
             onKeyDown={handleKeyDown}
-            className="w-full skew-x-12 bg-transparent py-3.5 text-lg font-bold text-ink italic placeholder:font-semibold placeholder:text-steel focus:outline-none"
+            className="w-full skew-x-12 bg-transparent py-3 text-base font-bold sm:py-3.5 sm:text-lg text-ink italic placeholder:font-semibold placeholder:text-steel focus:outline-none"
           />
           <kbd aria-hidden="true" className="hidden skew-x-12 border-2 border-ink px-2 text-xs font-black text-ink sm:inline-block">
             /
@@ -165,7 +165,7 @@ export function CharacterInput({ id, characters, excludedIds, onSelect }: Charac
         <ul
           id={listId}
           role="listbox"
-          className="absolute z-20 mt-3 flex max-h-96 w-full flex-col gap-1.5 overflow-y-auto border-2 border-orange bg-ink/90 px-5 py-4"
+          className="absolute z-20 mt-3 flex max-h-[60vh] w-full flex-col gap-1.5 overflow-y-auto border-2 border-orange bg-ink/90 px-3 py-3 sm:max-h-96 sm:px-5 sm:py-4"
         >
           {suggestions.map(({ character, label, realName }, index) => (
             <li
@@ -181,15 +181,15 @@ export function CharacterInput({ id, characters, excludedIds, onSelect }: Charac
               onMouseEnter={() => setActiveIndex(index)}
               className="mm-row cursor-pointer py-1.5 pl-2"
             >
-              <span className="grid min-w-14 place-items-center border-2 border-current px-1 text-sm font-black italic">
+              <span className="grid min-w-11 place-items-center border-2 border-current px-1 text-xs font-black italic sm:min-w-14 sm:text-sm">
                 {characterNumber(character.id)}
               </span>
               <Avatar character={character} size="sm" />
-              <span className="truncate text-xl font-black uppercase italic">
+              <span className="min-w-0 text-sm leading-tight font-black uppercase italic sm:truncate sm:text-xl">
                 <span className="text-scarlet">{label.slice(0, typedLength)}</span>
                 {label.slice(typedLength)}
               </span>
-              {realName && <span className="mm-label ml-auto truncate">{realName}</span>}
+              {realName && <span className="mm-label ml-auto hidden truncate sm:inline">{realName}</span>}
             </li>
           ))}
         </ul>

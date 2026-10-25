@@ -3,6 +3,7 @@ import { Avatar } from './components/Avatar';
 import { Backdrop } from './components/Backdrop';
 import { Card } from './components/Card';
 import { CharacterInput } from './components/CharacterInput';
+import { DevCredit } from './components/DevCredit';
 import { GuessGrid } from './components/GuessGrid';
 import { Hero } from './components/Hero';
 import { HowToPlay } from './components/HowToPlay';
@@ -86,7 +87,8 @@ export default function App() {
 
         <GuessGrid guesses={game.guesses} />
 
-        {mode === 'daily' && (
+        {/* No dia do lançamento não existe "ontem". */}
+        {mode === 'daily' && getGameNumber() > 1 && (
           <p className="mm-row ml-auto w-fit max-w-full">
             <span className="mm-label">Ontem</span>
             <Avatar character={daily.yesterday} size="sm" />
@@ -97,17 +99,21 @@ export default function App() {
       </main>
 
       <footer className="mt-auto border-t-2 border-orange bg-ink/85">
-        <p className="mm-label mx-auto max-w-6xl px-4 py-4 normal-case sm:px-6">
-          {CHARACTERS.length} ninjas até o fim de Shippuden · Dados:{' '}
-          <a href="https://naruto.fandom.com" target="_blank" rel="noreferrer" className="text-white underline hover:text-orange">
-            Narutopedia ↗
-          </a>{' '}
-          (CC BY-SA) · Fotos e popularidade:{' '}
-          <a href="https://anilist.co" target="_blank" rel="noreferrer" className="text-white underline hover:text-orange">
-            AniList ↗
-          </a>{' '}
-          · Naruto © Masashi Kishimoto
-        </p>
+        {/* Uma linha só no desktop; no celular quebra em duas. */}
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-4 gap-y-1.5 px-4 py-2.5 text-center sm:px-6 lg:flex-nowrap lg:justify-between lg:py-2 lg:text-left">
+          <p className="mm-label text-[10px]! normal-case lg:whitespace-nowrap">
+            {CHARACTERS.length} ninjas até Shippuden · Dados:{' '}
+            <a href="https://naruto.fandom.com" target="_blank" rel="noreferrer" className="text-white underline hover:text-orange">
+              Narutopedia
+            </a>{' '}
+            (CC BY-SA) · Fotos:{' '}
+            <a href="https://anilist.co" target="_blank" rel="noreferrer" className="text-white underline hover:text-orange">
+              AniList
+            </a>{' '}
+            · Naruto © Masashi Kishimoto
+          </p>
+          <DevCredit />
+        </div>
       </footer>
 
       <HowToPlay open={rulesOpen} onClose={() => setRulesOpen(false)} />

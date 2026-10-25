@@ -53,7 +53,7 @@ export function HowToPlay({ open, onClose }: HowToPlayProps) {
 
       <div className="flex flex-col gap-5 px-7 pt-5 pb-12">
         <p className="text-steel">
-          Escreva o nome de um ninja. Cada palpite vira uma faixa que compara gênero, afiliação,
+          Escreva o nome de um ninja. Cada palpite compara gênero, afiliação,
           clã, elemento, estreia, atributos e tipo de jutsu com o ninja escondido.
         </p>
 
@@ -71,9 +71,8 @@ export function HowToPlay({ open, onClose }: HowToPlayProps) {
         </ul>
 
         <p className="text-sm text-steel">
-          Passe o mouse ou toque numa célula para ler o resultado. Com 3 palpites libera a inicial
-          do nome; com 6, a silhueta. Aperte <kbd className="font-black text-ink">/</kbd> para ir
-          direto à busca.
+          Passe o mouse ou toque numa célula para ler o resultado. No computador, aperte{' '}
+          <kbd className="font-black text-ink">/</kbd> para ir direto à busca.
         </p>
         <p className="mm-label">Guide · Diário: um ninja por dia · Infinito: quantos quiser</p>
       </div>

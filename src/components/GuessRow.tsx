@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { characterNumber } from '../data/characters';
 import type { Character } from '../types/character';
-import type { AttributeFeedback, GuessResult, MatchResult } from '../types/game';
+import type { AttributeFeedback, AttributeKey, GuessResult, MatchResult } from '../types/game';
 import { Avatar } from './Avatar';
 import { GenderIcon } from './GenderIcon';
 import { NatureIcon } from './NatureIcon';
@@ -31,9 +31,22 @@ const STAGGER_MS = 160;
 /** Colunas: o ninja ocupa mais espaço que os atributos. */
 export const GUESS_COLUMNS = 'grid-cols-[1.6fr_repeat(7,minmax(0,1fr))]';
 
+/** Nome de cada coluna, na ordem em que o feedback vem. */
+export const ATTRIBUTE_LABELS: Record<AttributeKey, string> = {
+  gender: 'Gênero',
+  affiliations: 'Afiliação',
+  clan: 'Clã',
+  natures: 'Elemento',
+  debut: 'Estreia',
+  abilities: 'Atributos',
+  jutsuTypes: 'Tipo de jutsu',
+};
+
 interface FeedbackCellProps {
   feedback: AttributeFeedback;
   index: number;
+  /** Nome do atributo escrito dentro da célula, no cartão do celular (onde não há cabeçalho). */
+  caption?: string;
   /** Conteúdo no lugar do texto, como os selos dos elementos. */
   children?: ReactNode;
 }
@@ -42,7 +55,7 @@ interface FeedbackCellProps {
  * Célula de resultado. Ao passar o mouse, tocar ou focar com o teclado, vira branca com
  * a lasca vermelha e explica o resultado (e, na estreia, para que lado está o certo).
  */
-function FeedbackCell({ feedback, index, children }: FeedbackCellProps) {
+function FeedbackCell({ feedback, index, caption, children }: FeedbackCellProps) {
   const { label, result, direction } = feedback;
   const arrow = direction === 'later' ? '↑' : direction === 'earlier' ? '↓' : null;
   const explanation = [
@@ -58,8 +71,9 @@ function FeedbackCell({ feedback, index, children }: FeedbackCellProps) {
       role="cell"
       tabIndex={0}
       style={{ animationDelay: `${index * STAGGER_MS}ms` }}
-      className={`nd-cell animate-reveal ${RESULT_STYLES[result]}`}
+      className={`nd-cell animate-reveal ${caption ? 'nd-cell--captioned' : ''} ${RESULT_STYLES[result]}`}
     >
+      {caption && <span className="nd-cell__caption">{caption}</span>}
       <span aria-hidden="true" className="nd-cell__glyph">
         {RESULT_GLYPHS[result]}
       </span>
@@ -105,6 +119,35 @@ export function GuessRow({ guess, index }: { guess: GuessResult; index: number }
         </FeedbackCell>
       ))}
     </div>
+  );
+}
+
+/**
+ * Versão do celular: um cartão por palpite, com o ninja numa faixa branca e os atributos numa
+ * grade de 3 colunas. Cada célula traz o nome do atributo, já que não há linha de cabeçalho.
+ */
+export function GuessCard({ guess }: { guess: GuessResult }) {
+  const { character } = guess;
+  return (
+    <li className="flex flex-col gap-[3px]">
+      <div className="-skew-x-12 border-2 border-ink bg-white px-4 py-1.5 shadow-[inset_-7px_0_0_var(--scarlet),4px_4px_0_var(--ink)]">
+        <div className="flex skew-x-12 items-center gap-3">
+          <Avatar character={character} size="sm" />
+          <span className="text-xs font-black text-scarlet italic">{characterNumber(character.id)}</span>
+          <span className="truncate text-base leading-tight font-black text-ink uppercase italic">{character.name}</span>
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-[3px] border-2 border-ink bg-ink">
+        {guess.feedback.map((feedback, i) => (
+          // A inclinação fica no invólucro: a animação de virada usa o transform da própria célula.
+          <div key={feedback.key} className={`-skew-x-12 ${i === guess.feedback.length - 1 ? 'col-span-3' : ''}`}>
+            <FeedbackCell feedback={feedback} index={i} caption={ATTRIBUTE_LABELS[feedback.key]}>
+              {cellContent(feedback, character)}
+            </FeedbackCell>
+          </div>
+        ))}
+      </div>
+    </li>
   );
 }
 
